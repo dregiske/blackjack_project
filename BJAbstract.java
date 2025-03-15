@@ -71,7 +71,7 @@ public abstract class BJAbstract implements BJInterface{
     protected static final String PROMPT_MOVE =
         "What's your move? (Type the move)";
     protected static final String PROMPT_PLAY = 
-        "Want to play? (Type p to play or q to quit)";
+        "Want to play? (Type q to quit)";
 
     // Other controls
     protected static final String QUIT = "q";
@@ -82,14 +82,25 @@ public abstract class BJAbstract implements BJInterface{
         for(String card : playerHand){
             System.out.print(" " + card);
         }
+        System.out.print("\n");
         System.out.println("Total score: " + handValue(playerHand));
     }
 
     @Override
-    public void printDealerHand(List<String> dealerHand){
+    public void printDealerHalfHand(List<String> dealerHand){
         System.out.print("Dealer shows: ");
         String card = dealerHand.get(0);
         System.out.print(card + "\n");
+    }
+
+    @Override
+    public void printDealerFullHand(List<String> dealerHand){
+        System.out.print("Dealers hand is: ");
+        for(String card : dealerHand){
+            System.out.print(" " + card);
+        }
+        System.out.print("\n");
+        System.out.println("Total score: " + handValue(dealerHand));
     }
 
     public abstract void hit(List<String> hand, List<String> deck);
@@ -157,6 +168,6 @@ public abstract class BJAbstract implements BJInterface{
 
     // Shuffle the deck again
     Collections.shuffle(deck);
-    System.out.println("Deck has been reshuffled.");
+    System.out.println("Deck has been shuffled.");
     }
 }

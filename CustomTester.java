@@ -1,15 +1,17 @@
+
 /**
  * This is the CustomTester file that contains
  * the CustomTester class
  */
-import org.junit.*;
-import static org.junit.Assert.*;
-import java.io.*;
+
+// import org.junit.*;
+// import static org.junit.Assert.*;
+// import java.io.*;
 
 /**
  * This is the CustomTester class that contains
  * test for the Blackjack game
- */
+
 public class CustomTester {
 
     @Test
@@ -57,3 +59,4 @@ public class CustomTester {
         // TODO
     }
 }
+*/

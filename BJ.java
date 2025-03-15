@@ -2,6 +2,7 @@
  * This is the BJ file that contains
  * the BJ class
  */
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,7 +19,12 @@ public class BJ extends BJAbstract{
     // Constructor
     public BJ(){
         this.deckIndex = 0;
+
         this.bettingWallet = initialWallet;
+
+        this.playerHand = new ArrayList<>();
+        this.dealerHand = new ArrayList<>();
+
         this.possibleMoves = DEFAULT_MOVES;   
     }
 
@@ -50,6 +56,8 @@ public class BJ extends BJAbstract{
             game.parseBet(input);
 
             game.initialDeal();
+            game.printPlayerHand(game.playerHand);
+            game.printDealerHand(game.dealerHand);
             game.playerTurn();
             game.dealerTurn();
             game.determineWinner();
@@ -112,9 +120,13 @@ public class BJ extends BJAbstract{
     }
     
     public void dealerTurn(){
+        printDealerFullHand(dealerHand);
         while(handValue(dealerHand) < 17){
+            System.out.println("Dealer hits.");
             hit(dealerHand, deck);
+            printDealerFullHand(dealerHand);
         }
+
     }
     
     public int determineWinner(){

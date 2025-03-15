@@ -18,11 +18,18 @@ public interface BJInterface {
     void printPlayerHand(List<String> playerHand);
 
     /**
-     * Print the dealers hand
+     * Prints the first card of dealers hand
      * 
-     * @param dealerHand An ArrayList of the dealers hand
+     * @param dealerHand an ArrayList of the dealers hand
      */
-    void printDealerHand(List<String> dealerHand);
+    void printDealerHalfHand(List<String> dealerHand);
+
+    /**
+     * Prints the dealers full hand
+     * 
+     * @param dealerHand an ArrayList of the dealers hand
+     */
+    void printDealerFullHand(List<String> dealerHand);
 
     /**
      * Deal another card from the deck
