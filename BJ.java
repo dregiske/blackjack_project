@@ -57,7 +57,7 @@ public class BJ extends BJAbstract{
 
             game.initialDeal();
             game.printPlayerHand(game.playerHand);
-            game.printDealerHand(game.dealerHand);
+            game.printDealerHalfHand(game.dealerHand);
             game.playerTurn();
             game.dealerTurn();
             game.determineWinner();
