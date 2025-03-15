@@ -18,6 +18,7 @@ public class BJ extends BJAbstract{
     // Constructor
     public BJ(){
         this.deckIndex = 0;
+        this.bettingWallet = initialWallet;
         this.possibleMoves = DEFAULT_MOVES;   
     }
 
@@ -25,19 +26,40 @@ public class BJ extends BJAbstract{
         BJ game = new BJ(); // create game instance
         game.startGame(); // start game
 
+        Scanner scanner = new Scanner(System.in);
+
         while(true){
-            if(args[0].equals(QUIT)){
-                System.out.println("Thanks for playing!");
+            System.out.println(PROMPT_PLAY);
+            String input = scanner.nextLine().toLowerCase();
+
+            // check if player quits
+            if(input.equals(QUIT)){
+                System.out.println(THANKS);
                 break;
             }
-            // TODO
+
+            // check if there are enough cards in deck
+            if(game.deckIndex >= 40){
+                System.out.println("Shuffling deck. . .");
+                game.shuffleDeck();
+                game.deckIndex = 0; // reset deck index
+            }
+
+            System.out.println(PLACE_BETS);
+            input = scanner.nextLine().toLowerCase();
+            game.parseBet(input);
+
+            game.initialDeal();
+            game.playerTurn();
+            game.dealerTurn();
+            game.determineWinner();
         }
+        scanner.close();
     }
     
     public void startGame(){
         System.out.println("Welcome to Blackjack!");
         shuffleDeck();
-        initialDeal();
     }
 
     public void hit(List<String> hand, List<String> deck){
@@ -77,35 +99,40 @@ public class BJ extends BJAbstract{
                     break;
                 }
                 else if(move.equals("double")){
-                    // TODO
+                    // incorporate a betting system for double
+                    break;
                 }
                 else if(move.equals("split")){
-                    // TODO
+                    // incorporate a split system
+                    break;
                 }
             }
         }
+        scanner.close();
     }
     
     public void dealerTurn(){
-        if(handValue(dealerHand) < 17){
+        while(handValue(dealerHand) < 17){
             hit(dealerHand, deck);
         }
-        else{
-            // TODO
-        }
-
     }
     
     public int determineWinner(){
         int playerValue = handValue(playerHand);
         int dealerValue = handValue(dealerHand);
 
-        if(playerValue > dealerValue){
+        if(playerValue > dealerValue && playerValue <= 21){
+            System.out.println(PLAYER_WIN);
             return 1; // player wins, return pos
         }
-        else if(playerValue < dealerValue){
+        else if(playerValue < dealerValue && dealerValue <= 21){
+            if(dealerValue == 21){
+                System.out.println(DEALER_21);
+            }
+            System.out.println(DEALER_WIN);
             return -1; // dealer wins, return neg
         }
+        System.out.println(PUSH);
         return 0; // push (nothing happens), return 0
     }
 }

@@ -25,13 +25,18 @@ public abstract class BJAbstract implements BJInterface{
         "JS", "QS", "KS", "AS"
     ));
 
-    // The index of the deck, tells
-    // how many cards are left
-    int deckIndex;
+    // tracks the amount of cards dealt
+    public int deckIndex;
 
     // The dealers and players hand
     protected List<String> playerHand = new ArrayList<>();
     protected List<String> dealerHand = new ArrayList<>();
+
+    // The initial betting wallet
+    public int initialWallet = 200;
+
+    // The total wallet
+    public int bettingWallet;
 
     // The moves allowed in each version of BJ
     String[] possibleMoves;
@@ -55,39 +60,39 @@ public abstract class BJAbstract implements BJInterface{
         "You push.";
     protected static final String PLAYER_WIN =
         "You win!";
-    protected static final String PLAYER_BUST =
-        "You busted, better luck next time!";
     protected static final String DEALER_WIN =
         "Dealer wins.";
     protected static final String DEALER_21 = 
         "Dealer has 21.";
     protected static final String THANKS =
         "Thanks for playing!";
+    protected static final String PLACE_BETS = 
+        "Place your bets!";
     protected static final String PROMPT_MOVE =
-        "What's your move? (Type the move or q to quit)";
+        "What's your move? (Type the move)";
+    protected static final String PROMPT_PLAY = 
+        "Want to play? (Type p to play or q to quit)";
 
     // Other controls
     protected static final String QUIT = "q";
 
     @Override
     public void printPlayerHand(List<String> playerHand){
-        System.out.println("Your hand is: ");
+        System.out.print("Your hand is: ");
         for(String card : playerHand){
             System.out.print(" " + card);
         }
-        System.out.print("Total score: " + handValue(playerHand));
+        System.out.println("Total score: " + handValue(playerHand));
     }
 
     @Override
     public void printDealerHand(List<String> dealerHand){
-        System.out.println("Dealer hand is: ");
-        for(String card : dealerHand){
-            System.out.print(" " + card);
-        }
-        System.out.print("\nTotal score: " + handValue(dealerHand));
+        System.out.print("Dealer shows: ");
+        String card = dealerHand.get(0);
+        System.out.print(card + "\n");
     }
 
-    public abstract void hit(String[] hand, String[] deck);
+    public abstract void hit(List<String> hand, List<String> deck);
 
     @Override
     public int handValue(List<String> hand){
@@ -125,6 +130,12 @@ public abstract class BJAbstract implements BJInterface{
     }
 
     @Override
+    public int parseBet(String input){
+        String value = input.substring(0, input.length() - 1);
+        return Integer.parseInt(value);
+    }
+
+    @Override
     public boolean isValidMove(String move){
         for(int i = 0; i < possibleMoves.length; i++){
             if(move.equals(possibleMoves[i])){
@@ -136,6 +147,16 @@ public abstract class BJAbstract implements BJInterface{
 
     @Override
     public void shuffleDeck(){
-        Collections.shuffle(deck);
+        deck.clear();  // remove any leftovers
+        deck.addAll(List.of( // reinitialize the deck
+        "2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H", "10H", "JH", "QH", "KH", "AH",
+        "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "10D", "JD", "QD", "KD", "AD",
+        "2C", "3C", "4C", "5C", "6C", "7C", "8C", "9C", "10C", "JC", "QC", "KC", "AC",
+        "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS", "KS", "AS"
+    ));
+
+    // Shuffle the deck again
+    Collections.shuffle(deck);
+    System.out.println("Deck has been reshuffled.");
     }
 }

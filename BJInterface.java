@@ -35,7 +35,7 @@ public interface BJInterface {
     /**
      * Calculates the value of the hand
      * 
-     * @param hand An ArrayList of the hand to calculate
+     * @param hand an ArrayList of the hand to calculate
      * @return int value of the total hand
      */
     int handValue(List<String> hand);
@@ -48,6 +48,14 @@ public interface BJInterface {
      * @return int value of the card
      */
     int parseValue(String card);
+
+    /**
+     * Turns the bet input into a int value
+     * 
+     * @param input a string value from user
+     * @return the int value of the input
+     */
+    int parseBet(String input);
 
     /**
      * Checks if move was valid
