@@ -64,6 +64,10 @@ public abstract class BJAbstract implements BJInterface{
         "Dealer wins.";
     protected static final String DEALER_21 = 
         "Dealer has 21.";
+    protected static final String PLAYER_21 = 
+        "You got 21!";
+    protected static final String PLAYER_BUST =
+        "You busted.";
     protected static final String THANKS =
         "Thanks for playing!";
     protected static final String PLACE_BETS = 

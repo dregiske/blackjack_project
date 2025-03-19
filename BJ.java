@@ -53,12 +53,11 @@ public class BJ extends BJAbstract{
 
             System.out.println(PLACE_BETS);
             input = scanner.nextLine().toLowerCase();
-            game.parseBet(input);
 
             game.initialDeal();
             game.printPlayerHand(game.playerHand);
             game.printDealerHalfHand(game.dealerHand);
-            game.playerTurn();
+            game.playerTurn(scanner);
             game.dealerTurn();
             game.determineWinner();
         }
@@ -90,18 +89,20 @@ public class BJ extends BJAbstract{
         hit(dealerHand, deck);
     }
     
-    public void playerTurn(){
-        Scanner scanner = new Scanner(System.in);
+    public void playerTurn(Scanner scanner){
         String move;
-        boolean isValid = false;
-
-        while(!isValid){
-            System.out.print(PROMPT_MOVE);
+        
+        while(true){
+            System.out.println(PROMPT_MOVE);
             move = scanner.nextLine().toLowerCase();
             if(isValidMove(move)){
-                isValid = true;
                 if(move.equals("hit")){
                     hit(playerHand, deck);
+                    if(handValue(playerHand) > 21){
+                        break;
+                    }
+                    possibleMoves = POST_HIT;
+                    printPlayerHand(playerHand);
                 }
                 else if(move.equals("stand")){
                     break;
@@ -115,8 +116,10 @@ public class BJ extends BJAbstract{
                     break;
                 }
             }
+            else{
+                System.out.println(INVALID_INPUT);
+            }
         }
-        scanner.close();
     }
     
     public void dealerTurn(){
@@ -126,7 +129,6 @@ public class BJ extends BJAbstract{
             hit(dealerHand, deck);
             printDealerFullHand(dealerHand);
         }
-
     }
     
     public int determineWinner(){
@@ -134,14 +136,25 @@ public class BJ extends BJAbstract{
         int dealerValue = handValue(dealerHand);
 
         if(playerValue > dealerValue && playerValue <= 21){
-            System.out.println(PLAYER_WIN);
+            if(playerValue == 21){
+                System.out.println(PLAYER_21);
+            }
+            else{
+                System.out.println(PLAYER_WIN);
+            }
             return 1; // player wins, return pos
+        }
+        else if(playerValue > 21){
+            System.out.println(PLAYER_BUST);
+            return -1; // player bust, return neg
         }
         else if(playerValue < dealerValue && dealerValue <= 21){
             if(dealerValue == 21){
                 System.out.println(DEALER_21);
             }
-            System.out.println(DEALER_WIN);
+            else{
+                System.out.println(DEALER_WIN);
+            }
             return -1; // dealer wins, return neg
         }
         System.out.println(PUSH);
