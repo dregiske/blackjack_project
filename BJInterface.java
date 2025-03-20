@@ -65,6 +65,14 @@ public interface BJInterface {
     int parseBet(String input);
 
     /**
+     * Checks if bet value is valid
+     * 
+     * @param bet a int value from user
+     * @return true if bet is valid, false otherwise
+     */
+    boolean isValidBet(int bet);
+
+    /**
      * Checks if move was valid
      * 
      * @param move Move input from the player

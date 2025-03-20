@@ -68,6 +68,8 @@ public abstract class BJAbstract implements BJInterface{
         "You got 21!";
     protected static final String PLAYER_BUST =
         "You busted.";
+    protected static final String DELAER_BUST =
+        "Dealer busted.";
     protected static final String THANKS =
         "Thanks for playing!";
     protected static final String PLACE_BETS = 
@@ -140,14 +142,27 @@ public abstract class BJAbstract implements BJInterface{
             case "A":
                 return 11;
             default:
-                return Integer.parseInt(value);
+                return Integer.parseInt(value); // convert number cards
         }
     }
 
     @Override
     public int parseBet(String input){
-        String value = input.substring(0, input.length() - 1);
-        return Integer.parseInt(value);
+        try{
+            return Integer.parseInt(input.trim());
+        } catch (NumberFormatException e){
+            System.out.println("Invalid bet value: " + input);
+            return 0;
+        }
+    }
+
+    @Override
+    public boolean isValidBet(int bet){
+        if(bet > bettingWallet ||
+           bet <= 0){
+            return false;
+        }
+        return true;
     }
 
     @Override
