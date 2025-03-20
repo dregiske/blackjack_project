@@ -38,6 +38,9 @@ public abstract class BJAbstract implements BJInterface{
     // The total wallet
     public int bettingWallet;
 
+    // The current bet amount
+    public int bet;
+
     // The moves allowed in each version of BJ
     String[] possibleMoves;
 
@@ -119,7 +122,7 @@ public abstract class BJAbstract implements BJInterface{
 
         for(String card : hand){
             value = parseValue(card);
-            if(card.endsWith("A")){
+            if(card.startsWith("A")){
                 aceCount++;
             }
             total += value;
