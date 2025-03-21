@@ -20,12 +20,14 @@ public class BJ extends BJAbstract{
     public BJ(){
         this.deckIndex = 0;
 
+        this.handCount = 1;
+
         this.bettingWallet = initialWallet;
 
         this.playerHand = new ArrayList<>();
         this.dealerHand = new ArrayList<>();
 
-        this.possibleMoves = DEFAULT_MOVES;   
+        this.possibleMoves = DEFAULT_MOVES;
     }
 
     public static void main(String[] args) {
@@ -88,8 +90,7 @@ public class BJ extends BJAbstract{
             }
             System.out.println("You have $" + game.bettingWallet + " left.");
 
-            game.resetHand(game.playerHand);
-            game.resetHand(game.dealerHand);
+            game.resetGame();
         }
         scanner.close();
     }
@@ -97,6 +98,27 @@ public class BJ extends BJAbstract{
     public void startGame(){
         System.out.println("Welcome to Blackjack!");
         shuffleDeck();
+    }
+
+    public void resetGame(){
+        resetHand(playerHand);
+        resetHand(playerHand_1);
+        resetHand(playerHand_2);
+        resetHand(playerHand_3);
+        resetHand(dealerHand);
+        handCount = 1;
+    }
+
+    public void fullResetGame(){
+        resetHand(playerHand);
+        resetHand(playerHand_1);
+        resetHand(playerHand_2);
+        resetHand(playerHand_3);
+        resetHand(dealerHand);
+        bettingWallet = 200;
+        shuffleDeck();
+        deckIndex = 0;
+        handCount = 1;
     }
 
     public void resetHand(List<String> hand){
@@ -117,7 +139,8 @@ public class BJ extends BJAbstract{
     }
 
     public void initialDeal(){
-        deckIndex++; // burn first card
+        deck.remove(0); // burn first card
+
         hit(playerHand, deck);
         hit(dealerHand, deck);
         hit(playerHand, deck);
@@ -160,11 +183,7 @@ public class BJ extends BJAbstract{
                 }
 
                 else if(move.equals("split")){
-                    List<String> playerSplitHand = new ArrayList<>();
-                    String splitCard = hand.remove(1);
-                    playerSplitHand.add(splitCard);
-                    hit(hand, deck);
-                    hit(playerSplitHand, deck);
+                    split(hand, scanner);
                 }
             }
             else{
@@ -179,11 +198,33 @@ public class BJ extends BJAbstract{
         possibleMoves = POST_DOUBLE;
     }
 
-    public void split(List<String> hand){
-        List<String> playerSplitHand = new ArrayList<>();
+    public void split(List<String> hand, Scanner scanner){
+        List<String> splitHand = null;
+
+        if(handCount == 1){
+            splitHand = playerHand_1;
+        }
+        else if(handCount == 2){
+            splitHand = playerHand_2;
+        }
+        else if(handCount == 3){
+            splitHand = playerHand_3;
+        }
+
+        if(splitHand == null){
+            System.out.println("Invalid hand index.");
+            return;
+        }
+
         String splitCard = hand.remove(1);
-        playerSplitHand.add(splitCard);
+        splitHand.add(splitCard);
+        handCount++;
+
         hit(hand, deck);
+        playerTurn(scanner, hand);
+
+        hit(splitHand, deck);
+        playerTurn(scanner, splitHand);
     }
 
     public void dealerTurn(){
@@ -196,9 +237,15 @@ public class BJ extends BJAbstract{
             hit(dealerHand, deck);
             printDealerFullHand(dealerHand);
         }
+        // check if soft 17, then hit, otherwise continue
     }
 
     public int bettingProcess(Scanner scanner){
+        if(bettingWallet == 0){
+            System.out.println("No more funds to play! Resetting game.");
+            fullResetGame();
+        }
+
         String input;
 
         while(true){

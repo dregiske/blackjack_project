@@ -25,11 +25,19 @@ public abstract class BJAbstract implements BJInterface{
         "JS", "QS", "KS", "AS"
     ));
 
-    // tracks the amount of cards dealt
+    // Tracks the amount of cards dealt
     public int deckIndex;
 
-    // The dealers and players hand
+    // Tracks how many hands are being used in the game
+    public int handCount;
+
+    // The players hands
     protected List<String> playerHand = new ArrayList<>();
+    protected List<String> playerHand_1 = new ArrayList<>();
+    protected List<String> playerHand_2 = new ArrayList<>();
+    protected List<String> playerHand_3 = new ArrayList<>();
+    
+    // The dealers hand
     protected List<String> dealerHand = new ArrayList<>();
 
     // The initial betting wallet
@@ -127,7 +135,7 @@ public abstract class BJAbstract implements BJInterface{
             }
             total += value;
         }
-        if(aceCount > 0 && total > 21){
+        while(aceCount > 0 && total > 21){
             total -= 10;
             aceCount--;
         }
