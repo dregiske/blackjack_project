@@ -56,7 +56,7 @@ public class BJ extends BJAbstract{
             game.initialDeal();
             game.printPlayerHand(game.playerHand);
             game.printDealerHalfHand(game.dealerHand);
-            game.playerTurn(scanner);
+            game.playerTurn(scanner, game.playerHand);
             game.dealerTurn();
 
             int playerValue = game.handValue(game.playerHand);
@@ -66,11 +66,13 @@ public class BJ extends BJAbstract{
             if(outcome == 1){
                 if(playerValue == 21){
                     System.out.println(PLAYER_21);
+                    game.bettingWallet = game.bettingWallet + (game.bet * 2);
+                    // if only 2 cards, pay 3/2 odds
                 }
                 else{
                     System.out.println(PLAYER_WIN);
+                    game.bettingWallet = game.bettingWallet + (game.bet);
                 }
-                game.bettingWallet = game.bettingWallet + (game.bet * 2);
             }
             else if(outcome == -1){
                 if(dealerValue == 21){
@@ -122,8 +124,16 @@ public class BJ extends BJAbstract{
         hit(dealerHand, deck);
     }
     
-    public void playerTurn(Scanner scanner){
-        possibleMoves = DEFAULT_MOVES;
+    public void playerTurn(Scanner scanner, List<String> hand){
+        String card_1 = hand.get(0);
+        String card_2 = hand.get(1);
+        if(card_1.charAt(0) == card_2.charAt(0)){
+            possibleMoves = SPLIT_OPTION;
+        }
+        else{
+            possibleMoves = DEFAULT_MOVES;
+        }
+
         String move;
         
         while(true){
@@ -131,25 +141,30 @@ public class BJ extends BJAbstract{
             move = scanner.nextLine().toLowerCase();
             if(isValidMove(move)){
                 if(move.equals("hit")){
-                    hit(playerHand, deck);
+                    hit(hand, deck);
                     possibleMoves = POST_HIT;
-                    printPlayerHand(playerHand);
-                    if(handValue(playerHand) > 21){
+                    printPlayerHand(hand);
+                    if(handValue(hand) > 21){
                         break;
                     }
                 }
+
                 else if(move.equals("stand")){
                     break;
                 }
+
                 else if(move.equals("double")){
-                    bet = bet * 2;
-                    hit(playerHand, deck);
-                    possibleMoves = POST_DOUBLE;
-                    printPlayerHand(playerHand);
+                    doubleBet(hand);
+                    printPlayerHand(hand);
                     break;
                 }
+
                 else if(move.equals("split")){
-                    break;
+                    List<String> playerSplitHand = new ArrayList<>();
+                    String splitCard = hand.remove(1);
+                    playerSplitHand.add(splitCard);
+                    hit(hand, deck);
+                    hit(playerSplitHand, deck);
                 }
             }
             else{
@@ -158,6 +173,19 @@ public class BJ extends BJAbstract{
         }
     }
     
+    public void doubleBet(List<String> hand){
+        bet = bet * 2;
+        hit(hand, deck);
+        possibleMoves = POST_DOUBLE;
+    }
+
+    public void split(List<String> hand){
+        List<String> playerSplitHand = new ArrayList<>();
+        String splitCard = hand.remove(1);
+        playerSplitHand.add(splitCard);
+        hit(hand, deck);
+    }
+
     public void dealerTurn(){
         printDealerFullHand(dealerHand);
         while(handValue(dealerHand) < 17){
