@@ -153,7 +153,7 @@ public abstract class BJAbstract implements BJInterface{
             case "A":
                 return 11;
             default:
-                return Integer.parseInt(value); // convert number cards
+                return Integer.parseInt(value);
         }
     }
 

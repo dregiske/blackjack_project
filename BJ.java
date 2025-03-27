@@ -68,6 +68,7 @@ public class BJ extends BJAbstract{
             if(outcome == 1){
                 if(playerValue == 21){
                     System.out.println(PLAYER_21);
+                    
                     game.bettingWallet = game.bettingWallet + (game.bet * 2);
                     // if only 2 cards, pay 3/2 odds
                 }
@@ -279,5 +280,13 @@ public class BJ extends BJAbstract{
             return -1; // dealer wins, return neg
         }
         return 0; // push (nothing happens), return 0
+    }
+
+    public int countCards(List<String> hand){
+        int count = 0;
+        for(int i = 0; hand.get(i) != null; i++){
+            count++;
+        }
+        return count;
     }
 }
